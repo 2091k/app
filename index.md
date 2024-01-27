@@ -6,6 +6,7 @@
 <b>合集</b> | <b>大小</b>
 [当贝桌面IPV6.apk](/dbzmIPV6.apk)  | 5.48MB
 [开机启动.apk](/KJQD.apk)  | 2.5MB
+[华硕TV-VIP.apk](/hstv.apk)  | 5.27MB
 [未来电视-AH.apk](/wlds.apk)  | 9.62MB
 [牛牛乐园-AH.apk](/nnly.apk)  | 10.2MB
 
