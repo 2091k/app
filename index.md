@@ -1,10 +1,11 @@
-<b>直播</b>     | <b>大小</b>
--------- | -----
+<b>直播</b> | <b>大小</b>
+:---------- | :----------
 [BesTV_Jingxuan1.4.0.1.apk](/BesTV_Jingxuan1.4.0.1.apk)  | 1.66MB
 [BesTV_LiteIU_AHYD_7.6.1911.1.apk](/BesTV_LiteIU_AHYD_7.6.1911.1.apk)  | 13MB
 [IPTV_AHYD_Mtv.apk](/IPTV_AHYD_Mtv.apk)  | 13.5MB
-<b>合集</b>     | <b>大小</b>
+<b>合集</b> | <b>大小</b>
 [当贝桌面IPV6.apk](/dbzmIPV6.apk)  | 5.48MB
 [开机启动.apk](/KJQD.apk)  | 5.27MB
 [未来电视-AH.apk](/wlds.apk)  | 9.62MB
 [牛牛乐园-AH.apk](/nnly.apk)  | 10.2MB
+
