@@ -2,7 +2,7 @@
 :---------- | :----------
 [BesTV_Jingxuan1.4.0.1.apk](/BesTV_Jingxuan1.4.0.1.apk)  | 1.66MB
 [BesTV_LiteIU_AHYD_7.6.1911.1.apk](/BesTV_LiteIU_AHYD_7.6.1911.1.apk)  | 13MB
-[IPTV_AHYD_Mtv.apk](/AHYD-Mtv-2091k.cn.apk)  | 13.5MB
+[IPTV_AHYD_Mtv.apk](/IPTV_AHYD_Mtv.apk)  | 13.5MB
 <b>合集</b> | <b>大小</b>
 [当贝桌面IPV6.apk](/dbzmIPV6.apk)  | 5.48MB
 [开机启动.apk](/KJQD.apk)  | 2.5MB
