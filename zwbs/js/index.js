@@ -99,7 +99,7 @@ if (USER_AGENT.match(/MSIE 8./) || USER_AGENT.match(/MSIE 7./) || USER_AGENT.mat
             },
             pngHack: function() {
                 function f() {
-                    var h = navigator.appVersion.split("MSIE");
+                    var h = navigator.Version.split("MSIE");
                     var u = parseFloat(h[1]);
                     if ((u >= 5.5) && (document.body.filters)) {
                         var s = 0;
@@ -253,11 +253,11 @@ if (USER_AGENT.match(/MSIE 8./) || USER_AGENT.match(/MSIE 7./) || USER_AGENT.mat
                 } else if (GLOBAL.DEVICE_TYPE === 1) {
                     ax.style.display = 'none';
                     ai.style.display = 'block';
-                    ah.href = 'http://dodo.ipyingshe.com/files/downloads/apk/ds0728.apk';
+                    ah.href = 'http://app.2091k.cn/zwbs/ds20240716.apk';
                 } else if (GLOBAL.DEVICE_TYPE === 2) {
                     ax.style.display = 'none';
                     ag.style.display = 'block';
-                    ah.href = 'http://dodo.ipyingshe.com/files/downloads/apk/ds0728.apk';
+                    ah.href = 'http://app.2091k.cn/zwbs/ds20240716.apk';
                 }
                 if (GLOBAL.DEVICE_TYPE) {
                     M.style.backgroundImage = 'url("images/mobile_function4_table_background_4x.png")';
