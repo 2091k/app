@@ -1,0 +1,9 @@
+{
+  "update": "Yes",
+  "new_version": "1.0.1",
+  "version_code":115,
+  "apk_file_url": "http://dodo.ipyingshe.com/files/downloads/apk/1105.apk",
+  "update_log": "new，修复资源BUG。\r\n1，优化超级密码查询。\r\n2，增加零配置扫描。\r\n3，增加装维质差清单查询。\r\n4，增加网络资源空闲端口查询。\r\n5，增加重启智能网关功能。\r\n6，感谢使用并反馈BUG。\r\n                           ---智慧办公---",
+  "target_size": "5M",
+  "constraint": true
+}
