@@ -20,5 +20,5 @@
 
 <b>BarTender10.1下载地址</b> | <b>激活程序</b>
 :---------- | :----------
-[BarTender10.1](https://#)  | [Pa_ttrar(BarTender10.1).exe](/Pa_ttrar(BarTender10.1).exe)
+[BarTender10.1](https://#)  | [Pa_ttrar(BarTender10.1).exe](http://app.2091k.cn/Pa_ttrar(BarTender10.1).exe)
 
