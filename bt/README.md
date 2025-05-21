@@ -17,3 +17,8 @@
 :---------- | :----------
 [BT2022_R7_209432_Full_x64](https://d94r2itylgwnp.cloudfront.net/BarTender/11.3/BT2022_R7_209432_Full_x64.exe)  | [2022_R7.zip](/2022_R7.zip)
 
+
+<b>BarTender10.1下载地址</b> | <b>激活程序</b>
+:---------- | :----------
+[BarTender10.1](https://#)  | [Pa_ttrar(BarTender10.1).exe](/Pa_ttrar(BarTender10.1).exe)
+
