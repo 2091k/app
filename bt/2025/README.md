@@ -6,7 +6,7 @@
 <b>2019_R6下载地址</b> | <b>激活程序</b>
 :---------- | :----------
 [BT2019_R6_147532_Full](https://downloads1.bartendersoftware.com.cn/BarTender/11.1/BT2019_R6_147532_Full.exe)  | 
-[BT2019_R6_147532_Full_x64](https://downloads1.bartendersoftware.com.cn/BarTender/11.1/BT2019_R6_147532_Full_x64.exe)  | [2019_R5_R6_PAtch.zip](https://app.2019k.cn/bt/2019_R5_R6_PAtch.zip)
+[BT2019_R6_147532_Full_x64](https://downloads1.bartendersoftware.com.cn/BarTender/11.1/BT2019_R6_147532_Full_x64.exe)  | [2019_R5_R6_PAtch.zip](http://app.2019k.cn/bt/2019_R5_R6_PAtch.zip)
 
 <b>2021_R1下载地址</b> | <b>激活程序</b>
 :---------- | :----------
