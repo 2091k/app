@@ -13,9 +13,17 @@
 [BT2021_R1_160168_Full](https://downloads1.bartendersoftware.com.cn/BarTender/11.2/BT2021_R1_160168_Full.exe)  | 
 [BT2021_R1_160168_Full_x64](https://downloads1.bartendersoftware.com.cn/BarTender/11.2/BT2021_R1_160168_Full_x64.exe)  | [2021_R1.zip](http://app.2091k.cn/bt/2021_R1.zip)
 
+<b>2021_R9下载地址</b> | <b>激活程序</b>
+:---------- | :----------
+[BT2021_R9_186892_Full_x64](https://downloads1.bartendersoftware.com.cn/BarTender/11.2/BT2021_R9_186892_Full_x64.exe)  | [2021_R9.zip](http://app.2091k.cn/bt/2021_R9_key.zip)
+
 <b>2022_R7下载地址</b> | <b>激活程序</b>
 :---------- | :----------
-[BT2022_R7_209432_Full_x64](https://d94r2itylgwnp.cloudfront.net/BarTender/11.3/BT2022_R7_209432_Full_x64.exe)  | [2022_R7.zip](http://app.2091k.cn/bt/2022_R7.zip)
+[BT2022_R7_209432_Full_x64](https://downloads1.bartendersoftware.com.cn/BarTender/11.3/BT2022_R7_209432_Full_x64.exe)  | [2022_R7.zip](http://app.2091k.cn/bt/2022_R7.zip)
+
+<b>2022_R8下载地址</b> | <b>激活程序</b>
+:---------- | :----------
+[BT2022_R8_216048_Full_x64](https://downloads1.bartendersoftware.com.cn/BarTender/11.3/BT2022_R8_216048_Full_x64.exe)  | [2022_R8.zip](http://app.2091k.cn/bt/2022_R8_key.zip)
 
 
 <b>BarTender10.1下载地址</b> | <b>激活程序</b>
