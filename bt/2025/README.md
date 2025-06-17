@@ -1,6 +1,6 @@
 <b>2016_R8_R9下载地址</b> | <b>激活程序</b>
 :---------- | :----------
-[BT2016_R8_3153_Full](https://flist.2091k.cn/down/cct3dnvpibd/1910787893/BT2016_R8_3153_Full.exe)  | [2016_R8_32激活.exe](http://app.2091k.cn/bt/2016_R9_64激活.exe)
+[BT2016_R8_3153_Full](https://flist.2091k.cn/down/cct3dnvpibd/1910787893/BT2016_R8_3153_Full.exe)  | [2016_R8_32激活.exe](http://app.2091k.cn/bt/2016_R8_key.zip)
 [BT2016_R9_3160_Full_x64](https://downloads1.bartendersoftware.com.cn/BarTender/11.0/BT2016_R9_3160_Full_x64.exe)  | [2016_R9_64激活.exe](http://app.2091k.cn/bt/2016_R9_64激活.exe)
 
 <b>2019_R6下载地址</b> | <b>激活程序</b>
