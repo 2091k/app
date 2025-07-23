@@ -28,4 +28,4 @@
 
 <b>BarTender10.1下载地址</b> | <b>激活程序</b>
 :---------- | :----------
-[BarTender10.1](https://api.ddooo.com/down/175384/)  | [Pa_ttrar_BarTender10.1](http://app.2091k.cn/bt/Pa_ttrar_BarTender10.1.exe)
+[BarTender10.1](https://www.ddooo.com/softdown/175384.htm)  | [Pa_ttrar_BarTender10.1](http://app.2091k.cn/bt/Pa_ttrar_BarTender10.1.exe)
