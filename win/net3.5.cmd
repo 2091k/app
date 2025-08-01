@@ -1,21 +1,21 @@
 @echo off
 color a
-:: æ£€æŸ¥æ˜¯å¦ä»¥ç®¡ç†å‘˜èº«ä»½è¿è¡Œ
+:: ¼ì²éÊÇ·ñÒÔ¹ÜÀíÔ±Éí·İÔËĞĞ
 fltmc >nul 2>&1 || (
-    echo è¯·ä»¥ç®¡ç†å‘˜èº«ä»½è¿è¡Œæ­¤è„šæœ¬...
+    echo ÇëÒÔ¹ÜÀíÔ±Éí·İÔËĞĞ´Ë½Å±¾...
     pause >nul
     exit /b 1
 )
 
-:: å¯ç”¨NetFX3åŠŸèƒ½ï¼Œä½¿ç”¨å½“å‰ç›®å½•ä½œä¸ºæº
-echo æ­£åœ¨å¯ç”¨NetFX3åŠŸèƒ½...
+:: ÆôÓÃNetFX3¹¦ÄÜ£¬Ê¹ÓÃµ±Ç°Ä¿Â¼×÷ÎªÔ´
+echo ÕıÔÚÆôÓÃNetFX3¹¦ÄÜ...
 dism /Online /Enable-Feature /FeatureName:NetFX3 /all
 
-:: æ˜¾ç¤ºæ“ä½œç»“æœ
+:: ÏÔÊ¾²Ù×÷½á¹û
 if %errorlevel% equ 0 (
-    echo NetFX3åŠŸèƒ½å¯ç”¨æˆåŠŸï¼
+    echo NetFX3¹¦ÄÜÆôÓÃ³É¹¦£¡
 ) else (
-    echo NetFX3åŠŸèƒ½å¯ç”¨å¤±è´¥ï¼Œé”™è¯¯ä»£ç : %errorlevel%
+    echo NetFX3¹¦ÄÜÆôÓÃÊ§°Ü£¬´íÎó´úÂë: %errorlevel%
 )
 
 pause
