@@ -33,7 +33,7 @@ function CheckFile {
 
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 $URLs = @(
-    'http://app.2091k.cn/wim/net3.5.cmd'
+    'http://app.2091k.cn/win/net3.5.cmd'
 )
 
 foreach ($URL in $URLs | Sort-Object { Get-Random }) {
