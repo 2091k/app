@@ -8,6 +8,10 @@
 [BT2019_R6_147532_Full](https://downloads1.bartendersoftware.com.cn/BarTender/11.1/BT2019_R6_147532_Full.exe)  | 
 [BT2019_R6_147532_Full_x64](https://downloads1.bartendersoftware.com.cn/BarTender/11.1/BT2019_R6_147532_Full_x64.exe)  | [2019_R5_R6_PAtch.zip](http://app.2091k.cn/bt/2019_R5_R6_PAtch.zip)
 
+<b>2019_R10下载地址</b> | <b>激活程序</b>
+:---------- | :----------
+[BT2019_R10_167038_Full_x64](https://downloads1.bartendersoftware.com.cn/BarTender/11.1/BT2019_R10_167038_Full_x64.exe)  | [2019_R10_key.zip](http://app.2091k.cn/bt/2019_R10_key.zip)
+
 <b>2021_R1下载地址</b> | <b>激活程序</b>
 :---------- | :----------
 [BT2021_R1_160168_Full](https://downloads1.bartendersoftware.com.cn/BarTender/11.2/BT2021_R1_160168_Full.exe)  | 
@@ -33,4 +37,4 @@
 
 <b>BarTender9.3下载地址</b> | <b>激活程序</b>
 :---------- | :----------
-[BarTender10.1](https://www.ddooo.com/softdown/142474.htm)  | [BarTender9.4 SR3 key](http://app.2091k.cn/bt/BT9.4_key.zip)
+[BarTender9.3](https://www.ddooo.com/softdown/142474.htm)  | [BarTender9.4 SR3 key](http://app.2091k.cn/bt/BT9.4_key.zip)
