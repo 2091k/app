@@ -38,4 +38,4 @@
 
 <b>BarTender9.4下载地址</b> | <b>激活程序</b>
 :---------- | :----------
-[BarTender9.4](https://downloads1.bartendersoftware.com.cn/BarTender/9.4/BT94_SR3_2781_Suite.exe)  | [BarTender9.4 SR3 key](http://app.2091k.cn/bt/BT9.4_key.zip)
+[BarTender9.4](https://downloads1.bartendersoftware.com.cn/BarTender/9.4/BT94_SR3_2781_Suite.exe)  | [bt9.4_key](http://app.2091k.cn/bt/bt9.4_key.exe)
