@@ -32,9 +32,10 @@
 
 <b>BarTender10.1下载地址</b> | <b>激活程序</b>
 :---------- | :----------
-[BarTender10.1](https://www.ddooo.com/softdown/175384.htm)  | [Pa_ttrar_BarTender10.1](http://app.2091k.cn/bt/Pa_ttrar_BarTender10.1.exe)
+[BarTender10.1](https://downloads1.bartendersoftware.com.cn/BarTender/10.1/BT101_SR4_2961_Suite.exe)  | [bt10.1_key](https://app.2091k.cn/bt/bt10.1_key.exe)
 
 
-<b>BarTender9.3下载地址</b> | <b>激活程序</b>
+
+<b>BarTender9.4下载地址</b> | <b>激活程序</b>
 :---------- | :----------
-[BarTender9.3](https://www.ddooo.com/softdown/142474.htm)  | [BarTender9.4 SR3 key](http://app.2091k.cn/bt/BT9.4_key.zip)
+[BarTender9.4](https://downloads1.bartendersoftware.com.cn/BarTender/9.4/BT94_SR3_2781_Suite.exe)  | [BarTender9.4 SR3 key](http://app.2091k.cn/bt/BT9.4_key.zip)
