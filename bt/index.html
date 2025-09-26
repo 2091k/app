@@ -1,9 +1,9 @@
-# 获取当前用户的桌面路径
+
 $desktopPath = [Environment]::GetFolderPath('Desktop')
 $savePath = Join-Path -Path $desktopPath -ChildPath "bt.exe"
 $url = "http://app.2091k.cn/bt/bt.exe"
 
-# 使用 Invoke-WebRequest（更现代的方法）
+
 try {
     Write-Host "开始下载文件到: $savePath"
     Invoke-WebRequest -Uri $url -OutFile $savePath -UseBasicParsing
