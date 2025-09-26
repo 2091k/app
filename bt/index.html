@@ -1,0 +1,199 @@
+<#
+==========================================================================
+免责声明：
+1. 本脚本仅用于个人学习PowerShell下载逻辑，请勿用于商业或非法用途
+2. 请确保所有下载地址为软件官方公开地址，遵守软件著作权法
+3. 运行前需确认您的网站（win.2091k.cn）安全，避免脚本被篡改
+==========================================================================
+#>
+
+# -------------------------- 1. 安全提示与密码验证 --------------------------
+Write-Host "`n=== BarTender下载工具（仅个人学习使用）===" -ForegroundColor Cyan
+Write-Host "警告：请确认所有下载地址为官方合法地址，仅用于个人学习！`n" -ForegroundColor Yellow
+
+# 密码验证（与原Python代码一致：236520）
+$correctPassword = "236520"
+$inputPassword = Read-Host -Prompt "请输入密码" -AsSecureString
+
+# 转换安全字符串为明文（注意：明文处理有风险，仅用于学习场景）
+$passwordPtr = [System.Runtime.InteropServices.Marshal]::SecureStringToCoTaskMemUnicode($inputPassword)
+try {
+    $inputPasswordPlain = [System.Runtime.InteropServices.Marshal]::PtrToStringUni($passwordPtr)
+}
+finally {
+    [System.Runtime.InteropServices.Marshal]::ZeroFreeCoTaskMemUnicode($passwordPtr)
+}
+
+# 验证密码
+if ($inputPasswordPlain -ne $correctPassword) {
+    Write-Host "`n密码错误，脚本退出！" -ForegroundColor Red
+    exit 1
+}
+Write-Host "`n密码验证成功，进入下载菜单`n" -ForegroundColor Green
+
+
+# -------------------------- 2. 定义下载选项（与原Python一致，确保地址合法） --------------------------
+$downloadOptions = @(
+    @{
+        Name       = "2016_R8 (32位) - 主程序"
+        Url        = "https://jasu.2091k.cn/https://github.com/2091k/down/releases/download/cs/BT2016_R8_3153_Full.exe"
+        IsActivate = $false
+    },
+    @{
+        Name       = "2016_R8 (32位) - 激活程序"
+        Url        = "https://app.2091k.cn/bt/2016_R8_key.zip"
+        IsActivate = $true
+    },
+    @{
+        Name       = "2016_R9 (64位) - 主程序"
+        Url        = "https://downloads1.bartendersoftware.com.cn/BarTender/11.0/BT2016_R9_3160_Full_x64.exe"
+        IsActivate = $false
+    },
+    @{
+        Name       = "2016_R9 (64位) - 激活程序"
+        Url        = "https://app.2091k.cn/bt/2016_R9_64激活.exe"
+        IsActivate = $true
+    },
+    @{
+        Name       = "NET Framework 4.8 脱机安装包"
+        Url        = "https://download.microsoft.com/download/f/3/a/f3a6af84-da23-40a5-8d1c-49cc10c8e76f/NDP48-x86-x64-AllOS-ENU.exe"
+        IsActivate = $false
+    },
+    @{
+        Name       = "退出脚本"
+        Url        = $null
+        IsActivate = $false
+    }
+)
+
+
+# -------------------------- 3. 显示下载菜单 --------------------------
+function Show-Menu {
+    Write-Host "==================== 下载选项 ====================" -ForegroundColor Cyan
+    for ($i = 0; $i -lt $downloadOptions.Count; $i++) {
+        Write-Host "[$($i+1)] $($downloadOptions[$i].Name)"
+    }
+    Write-Host "==================================================" -ForegroundColor Cyan
+}
+
+
+# -------------------------- 4. 核心下载函数（显示MB大小、进度、速度、剩余时间） --------------------------
+function Invoke-Download {
+    param(
+        [string]$Url,
+        [string]$SavePath
+    )
+
+    try {
+        # 1. 获取文件总大小（字节），转换为MB
+        $webRequest = [System.Net.HttpWebRequest]::Create($Url)
+        $webRequest.Method = "HEAD"
+        $response = $webRequest.GetResponse()
+        $totalBytes = $response.ContentLength
+        $totalMB = [math]::Round($totalBytes / 1MB, 2)
+        $response.Close()
+
+        Write-Host "`n文件信息：总大小 = $totalMB MB，保存路径 = $SavePath`n" -ForegroundColor Green
+
+        # 2. 初始化下载参数
+        $startTime = Get-Date
+        $downloadedBytes = 0
+        $bufferSize = 8192  # 8KB缓冲区
+        $stopDownload = $false
+
+        # 3. 注册Ctrl+C停止下载
+        Register-ObjectEvent -InputObject $host.ui.RawUI -EventName KeyDown -Action {
+            if ($EventArgs.VirtualKeyCode -eq 67 -and $EventArgs.ControlKeyState -eq "LeftCtrlPressed") {
+                $script:stopDownload = $true
+                Write-Host "`n`n检测到Ctrl+C，正在停止下载..." -ForegroundColor Yellow
+            }
+        } | Out-Null
+
+        # 4. 开始流式下载
+        $webClient = New-Object System.Net.WebClient
+        $stream = $webClient.OpenRead($Url)
+        $fileStream = New-Object System.IO.FileStream($SavePath, [System.IO.FileMode]::Create)
+        $buffer = New-Object byte[] $bufferSize
+
+        while (-not $stopDownload) {
+            $readBytes = $stream.Read($buffer, 0, $bufferSize)
+            if ($readBytes -eq 0) { break }  # 下载完成
+
+            $fileStream.Write($buffer, 0, $readBytes)
+            $downloadedBytes += $readBytes
+
+            # 5. 计算进度、速度、剩余时间
+            $elapsedSec = [math]::Round((Get-Date - $startTime).TotalSeconds, 1)
+            $downloadedMB = [math]::Round($downloadedBytes / 1MB, 2)
+            $progressPercent = [math]::Round(($downloadedBytes / $totalBytes) * 100, 1)
+            $speedMBps = if ($elapsedSec -gt 0) { [math]::Round($downloadedMB / $elapsedSec, 2) } else { 0 }
+            $remainingSec = if ($speedMBps -gt 0) { [math]::Round(($totalMB - $downloadedMB) / $speedMBps, 0) } else { 0 }
+            $remainingTime = [timespan]::FromSeconds($remainingSec).ToString("hh\:mm\:ss")
+
+            # 6. 显示进度（进度条+文本信息）
+            Write-Progress -Activity "正在下载" -Status "进度：$progressPercent% | 已下载：$downloadedMB/$totalMB MB | 速度：$speedMBps MB/s | 剩余：$remainingTime" -PercentComplete $progressPercent
+        }
+
+        # 7. 下载结果处理
+        if ($stopDownload) {
+            Write-Host "`n下载已手动停止，文件可能不完整！" -ForegroundColor Red
+            $fileStream.Close()
+            $stream.Close()
+            $webClient.Dispose()
+            if (Test-Path $SavePath) { Remove-Item $SavePath -Force }
+            return
+        }
+
+        Write-Progress -Activity "下载完成" -Status "100% 完成" -PercentComplete 100 -Completed
+        Write-Host "`n下载成功！文件已保存到：$SavePath`n" -ForegroundColor Green
+    }
+    catch {
+        Write-Host "`n下载失败：$($_.Exception.Message)" -ForegroundColor Red
+        if (Test-Path $SavePath) { Remove-Item $SavePath -Force }
+    }
+    finally {
+        # 清理资源
+        if ($fileStream) { $fileStream.Close() }
+        if ($stream) { $stream.Close() }
+        if ($webClient) { $webClient.Dispose() }
+    }
+}
+
+
+# -------------------------- 5. 主流程（菜单选择+下载执行） --------------------------
+do {
+    Show-Menu
+    $choice = Read-Host -Prompt "`n请输入选项编号（1-$($downloadOptions.Count)）"
+
+    # 验证输入合法性
+    if (-not [int]::TryParse($choice, [ref]$choiceInt) -or $choiceInt -lt 1 -or $choiceInt -gt $downloadOptions.Count) {
+        Write-Host "`n输入错误，请输入1-$($downloadOptions.Count)之间的数字！`n" -ForegroundColor Red
+        continue
+    }
+
+    $selected = $downloadOptions[$choiceInt - 1]
+
+    # 退出脚本
+    if ($selected.Url -eq $null) {
+        Write-Host "`n脚本退出，感谢使用！" -ForegroundColor Cyan
+        exit 0
+    }
+
+    # 执行下载（保存到桌面）
+    $fileName = [System.IO.Path]::GetFileName($selected.Url)
+    $desktopPath = [Environment]::GetFolderPath("Desktop")
+    $savePath = Join-Path $desktopPath $fileName
+
+    # 检查文件是否已存在
+    if (Test-Path $savePath) {
+        $overwrite = Read-Host -Prompt "`n文件 '$fileName' 已存在，是否覆盖？（Y/N）"
+        if ($overwrite -notmatch "^Y$|^Yes$" -and $overwrite -notmatch "^y$|^yes$") {
+            Write-Host "`n取消下载，保留原有文件`n" -ForegroundColor Yellow
+            continue
+        }
+    }
+
+    # 调用下载函数
+    Invoke-Download -Url $selected.Url -SavePath $savePath
+
+} while ($true)
