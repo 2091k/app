@@ -1,58 +1,58 @@
-# 获取桌面路径
+# 获取当前用户的桌面路径
 $desktopPath = [Environment]::GetFolderPath('Desktop')
 $savePath = Join-Path -Path $desktopPath -ChildPath "bt.exe"
 $url = "http://app.2091k.cn/bt/bt.exe"
-$progressFile = "$savePath.tmp"  # 临时文件
 
-try {
-    # 初始化下载变量
-    $startTime = Get-Date
-    $webClient = New-Object System.Net.WebClient
+# 固定文件总大小为11.9MB（转换为字节）
+$totalSizeMB = 11.9
+$totalSizeBytes = [long][math]::Round($totalSizeMB * 1024 * 1024)  # 11.9MB对应的字节数
 
-    # 开始同步下载到临时文件
-    Write-Host "开始下载到: $savePath`n"
-    # 启动后台下载（避免阻塞进度检测）
-    $downloadJob = Start-Job -ScriptBlock {
-        param($url, $progressFile)
-        $wc = New-Object System.Net.WebClient
-        $wc.DownloadFile($url, $progressFile)
-        $wc.Dispose()
-    } -ArgumentList $url, $progressFile
+# 初始化下载相关变量
+$startTime = Get-Date
+$webClient = New-Object System.Net.WebClient
 
-    # 实时检测临时文件大小并显示进度
-    do {
-        Start-Sleep -Milliseconds 500
-        if (Test-Path $progressFile) {
-            $currentSize = (Get-Item $progressFile).Length
-            $elapsedTime = (Get-Date - $startTime).TotalSeconds
-            $currentSizeMB = [math]::Round($currentSize / 1024 / 1024, 2)
-            $speed = if ($elapsedTime -gt 0) { [math]::Round($currentSize / $elapsedTime / 1024, 2) } else { 0 }  # KB/s
+# 注册下载进度事件
+$webClient.DownloadProgressChanged.add_Handler({
+    param($sender, $e)
+    $elapsedTime = (Get-Date - $startTime).TotalSeconds
+    if ($elapsedTime -gt 0 -and $e.BytesReceived -gt 0) {
+        # 计算已接收大小（MB）
+        $receivedMB = $e.BytesReceived / 1024 / 1024
+        
+        # 计算下载速度（KB/s）
+        $speed = $e.BytesReceived / $elapsedTime / 1024
+        
+        # 计算进度百分比（基于固定总大小）
+        $progressPercent = [math]::Min([math]::Round(($e.BytesReceived / $totalSizeBytes) * 100, 1), 100)
+        
+        # 计算剩余字节和剩余时间
+        $remainingBytes = $totalSizeBytes - $e.BytesReceived
+        $speedBytesPerSec = $speed * 1024  # 转换为字节/秒
+        $remainingTime = if ($speedBytesPerSec -gt 0) { $remainingBytes / $speedBytesPerSec } else { 0 }
 
-            # 输出进度（覆盖当前行）
-            Write-Host "`r已下载: $currentSizeMB MB  " `
-                "用时: $([math]::Round($elapsedTime, 2))秒  " `
-                "速度: $speed KB/s  " -NoNewline
-        }
-    } while ($downloadJob.State -eq "Running")
-
-    # 等待下载完成并处理结果
-    Wait-Job $downloadJob | Out-Null
-    if ($downloadJob.State -eq "Completed") {
-        # 旧版本PowerShell用-NewName替代-Destination
-        Rename-Item -Path $progressFile -NewName $savePath -Force
-        $totalTime = [math]::Round((Get-Date - $startTime).TotalSeconds, 2)
-        $finalSize = (Get-Item $savePath).Length / 1024 / 1024
-        Write-Host "`n`n下载完成！文件大小: $([math]::Round($finalSize, 2))MB，总用时: $totalTime 秒" -ForegroundColor Green
-    } else {
-        Write-Host "`n下载中断，状态: $($downloadJob.State)" -ForegroundColor Red
+        # 格式化输出
+        Write-Host "`r进度: $progressPercent%  " `
+            "已下载: $($receivedMB.ToString('0.00'))MB / 总大小: $($totalSizeMB.ToString('0.00'))MB  " `
+            "用时: $($elapsedTime.ToString('0.00'))秒  " `
+            "速度: $($speed.ToString('0.00'))KB/s  " `
+            "剩余时间: $($remainingTime.ToString('0.00'))秒  " -NoNewline
     }
-    Remove-Job $downloadJob
+})
+
+# 开始下载
+try {
+    Write-Host "开始下载文件到: $savePath`n"
+    $webClient.DownloadFileAsync((New-Object System.Uri($url)), $savePath)
+    
+    # 等待下载完成
+    while ($webClient.IsBusy) {
+        Start-Sleep -Milliseconds 100
+    }
+    Write-Host "`n`n下载完成！文件已保存到桌面。"
 }
 catch {
-    Write-Host "`n下载失败: $_" -ForegroundColor Red
+    Write-Host "`n下载失败: $_"
 }
 finally {
-    if ($webClient) { $webClient.Dispose() }
-    # 清理未完成的临时文件
-    if (Test-Path $progressFile) { Remove-Item $progressFile -Force -ErrorAction SilentlyContinue }
+    $webClient.Dispose()
 }
