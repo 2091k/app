@@ -11,8 +11,14 @@ $totalSizeBytes = [long][math]::Round($totalSizeMB * 1024 * 1024)  # 11.9MB对�
 $startTime = Get-Date
 $webClient = New-Object System.Net.WebClient
 
-# 注册下载进度事件
-$webClient.DownloadProgressChanged.add_Handler({
+# 检查WebClient是否创建成功（避免空对象）
+if (-not $webClient) {
+    Write-Host "无法创建WebClient对象，下载失败"
+    exit 1
+}
+
+# 正确注册下载进度事件（使用+=运算符）
+$webClient.DownloadProgressChanged += {
     param($sender, $e)
     $elapsedTime = (Get-Date - $startTime).TotalSeconds
     if ($elapsedTime -gt 0 -and $e.BytesReceived -gt 0) {
@@ -37,7 +43,7 @@ $webClient.DownloadProgressChanged.add_Handler({
             "速度: $($speed.ToString('0.00'))KB/s  " `
             "剩余时间: $($remainingTime.ToString('0.00'))秒  " -NoNewline
     }
-})
+}
 
 # 开始下载
 try {
