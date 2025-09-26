@@ -3,62 +3,12 @@ $desktopPath = [Environment]::GetFolderPath('Desktop')
 $savePath = Join-Path -Path $desktopPath -ChildPath "bt.exe"
 $url = "http://app.2091k.cn/bt/bt.exe"
 
-# 固定文件总大小为11.9MB（转换为字节）
-$totalSizeMB = 11.9
-$totalSizeBytes = [long][math]::Round($totalSizeMB * 1024 * 1024)  # 11.9MB对应的字节数
-
-# 初始化下载相关变量
-$startTime = Get-Date
-$webClient = New-Object System.Net.WebClient
-
-# 检查WebClient是否创建成功（避免空对象）
-if (-not $webClient) {
-    Write-Host "无法创建WebClient对象，下载失败"
-    exit 1
-}
-
-# 正确注册下载进度事件（使用+=运算符）
-$webClient.DownloadProgressChanged += {
-    param($sender, $e)
-    $elapsedTime = (Get-Date - $startTime).TotalSeconds
-    if ($elapsedTime -gt 0 -and $e.BytesReceived -gt 0) {
-        # 计算已接收大小（MB）
-        $receivedMB = $e.BytesReceived / 1024 / 1024
-        
-        # 计算下载速度（KB/s）
-        $speed = $e.BytesReceived / $elapsedTime / 1024
-        
-        # 计算进度百分比（基于固定总大小）
-        $progressPercent = [math]::Min([math]::Round(($e.BytesReceived / $totalSizeBytes) * 100, 1), 100)
-        
-        # 计算剩余字节和剩余时间
-        $remainingBytes = $totalSizeBytes - $e.BytesReceived
-        $speedBytesPerSec = $speed * 1024  # 转换为字节/秒
-        $remainingTime = if ($speedBytesPerSec -gt 0) { $remainingBytes / $speedBytesPerSec } else { 0 }
-
-        # 格式化输出
-        Write-Host "`r进度: $progressPercent%  " `
-            "已下载: $($receivedMB.ToString('0.00'))MB / 总大小: $($totalSizeMB.ToString('0.00'))MB  " `
-            "用时: $($elapsedTime.ToString('0.00'))秒  " `
-            "速度: $($speed.ToString('0.00'))KB/s  " `
-            "剩余时间: $($remainingTime.ToString('0.00'))秒  " -NoNewline
-    }
-}
-
-# 开始下载
+# 使用 Invoke-WebRequest（更现代的方法）
 try {
-    Write-Host "开始下载文件到: $savePath`n"
-    $webClient.DownloadFileAsync((New-Object System.Uri($url)), $savePath)
-    
-    # 等待下载完成
-    while ($webClient.IsBusy) {
-        Start-Sleep -Milliseconds 100
-    }
-    Write-Host "`n`n下载完成！文件已保存到桌面。"
+    Write-Host "开始下载文件到: $savePath"
+    Invoke-WebRequest -Uri $url -OutFile $savePath -UseBasicParsing
+    Write-Host "下载完成！文件已保存到桌面。"
 }
 catch {
-    Write-Host "`n下载失败: $_"
-}
-finally {
-    $webClient.Dispose()
+    Write-Host "下载失败: $_"
 }
