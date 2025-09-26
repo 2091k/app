@@ -1,21 +1,23 @@
 <#
-==========================================================================
-免责声明：
-1. 本脚本仅用于个人学习PowerShell下载逻辑，请勿用于商业或非法用途
-2. 请确保所有下载地址为软件官方公开地址，遵守软件著作权法
-3. 运行前需确认您的网站（win.2091k.cn）安全，避免脚本被篡改
-==========================================================================
+修复说明：
+1. 增强输入验证，避免索引错误导致脚本退出
+2. 强制验证桌面路径，防止路径无效
+3. 全链路异常捕获，明确输出错误原因（不再静默退出）
+4. 增加日志提示，帮助定位执行环节
 #>
 
-# -------------------------- 1. 安全提示与密码验证 --------------------------
+# -------------------------- 1. 初始化与安全提示 --------------------------
+Set-StrictMode -Version Latest  # 严格模式：捕获未定义变量等错误
+$ErrorActionPreference = "Stop"  # 所有错误终止执行（便于定位问题）
+
 Write-Host "`n=== BarTender下载工具（仅个人学习使用）===" -ForegroundColor Cyan
 Write-Host "警告：请确认所有下载地址为官方合法地址，仅用于个人学习！`n" -ForegroundColor Yellow
 
-# 密码验证（与原Python代码一致：236520）
+# -------------------------- 2. 密码验证（与原逻辑一致） --------------------------
 $correctPassword = "236520"
 $inputPassword = Read-Host -Prompt "请输入密码" -AsSecureString
 
-# 转换安全字符串为明文（注意：明文处理有风险，仅用于学习场景）
+# 转换安全字符串为明文（学习场景临时使用）
 $passwordPtr = [System.Runtime.InteropServices.Marshal]::SecureStringToCoTaskMemUnicode($inputPassword)
 try {
     $inputPasswordPlain = [System.Runtime.InteropServices.Marshal]::PtrToStringUni($passwordPtr)
@@ -24,7 +26,6 @@ finally {
     [System.Runtime.InteropServices.Marshal]::ZeroFreeCoTaskMemUnicode($passwordPtr)
 }
 
-# 验证密码
 if ($inputPasswordPlain -ne $correctPassword) {
     Write-Host "`n密码错误，脚本退出！" -ForegroundColor Red
     exit 1
@@ -32,7 +33,7 @@ if ($inputPasswordPlain -ne $correctPassword) {
 Write-Host "`n密码验证成功，进入下载菜单`n" -ForegroundColor Green
 
 
-# -------------------------- 2. 定义下载选项（与原Python一致，确保地址合法） --------------------------
+# -------------------------- 3. 定义下载选项（确保URL可访问） --------------------------
 $downloadOptions = @(
     @{
         Name       = "2016_R8 (32位) - 主程序"
@@ -50,11 +51,6 @@ $downloadOptions = @(
         IsActivate = $false
     },
     @{
-        Name       = "2016_R9 (64位) - 激活程序"
-        Url        = "https://app.2091k.cn/bt/2016_R9_64激活.exe"
-        IsActivate = $true
-    },
-    @{
         Name       = "NET Framework 4.8 脱机安装包"
         Url        = "https://download.microsoft.com/download/f/3/a/f3a6af84-da23-40a5-8d1c-49cc10c8e76f/NDP48-x86-x64-AllOS-ENU.exe"
         IsActivate = $false
@@ -67,7 +63,8 @@ $downloadOptions = @(
 )
 
 
-# -------------------------- 3. 显示下载菜单 --------------------------
+# -------------------------- 4. 核心工具函数 --------------------------
+# 显示菜单
 function Show-Menu {
     Write-Host "==================== 下载选项 ====================" -ForegroundColor Cyan
     for ($i = 0; $i -lt $downloadOptions.Count; $i++) {
@@ -76,38 +73,65 @@ function Show-Menu {
     Write-Host "==================================================" -ForegroundColor Cyan
 }
 
+# 验证桌面路径（关键修复：防止路径无效导致退出）
+function Get-ValidDesktopPath {
+    try {
+        $desktopPath = [Environment]::GetFolderPath("Desktop")
+        # 强制检查路径是否存在（若用户桌面路径被自定义可能失效）
+        if (-not (Test-Path $desktopPath -PathType Container)) {
+            throw "桌面路径不存在：$desktopPath"
+        }
+        return $desktopPath
+    }
+    catch {
+        Write-Host "`n错误：获取桌面路径失败！原因：$($_.Exception.Message)" -ForegroundColor Red
+        Write-Host "请手动指定保存路径（例如 C:\Downloads），或检查系统环境变量。`n"
+        exit 1
+    }
+}
 
-# -------------------------- 4. 核心下载函数（显示MB大小、进度、速度、剩余时间） --------------------------
+# 下载函数（关键修复：全链路异常捕获+详细日志）
 function Invoke-Download {
     param(
-        [string]$Url,
-        [string]$SavePath
+        [Parameter(Mandatory=$true)][string]$Url,
+        [Parameter(Mandatory=$true)][string]$SavePath
     )
 
+    Write-Host "`n[下载开始] 目标文件：$($Url.Split('/')[-1])"
+    Write-Host "保存路径：$SavePath`n" -ForegroundColor Gray
+
     try {
-        # 1. 获取文件总大小（字节），转换为MB
+        # 1. 先检查URL是否可访问（发送HEAD请求获取文件大小）
         $webRequest = [System.Net.HttpWebRequest]::Create($Url)
         $webRequest.Method = "HEAD"
+        $webRequest.Timeout = 10000  # 10秒超时（避免卡死后退出）
         $response = $webRequest.GetResponse()
         $totalBytes = $response.ContentLength
-        $totalMB = [math]::Round($totalBytes / 1MB, 2)
         $response.Close()
 
-        Write-Host "`n文件信息：总大小 = $totalMB MB，保存路径 = $SavePath`n" -ForegroundColor Green
+        # 处理无文件大小的情况（部分服务器不支持HEAD）
+        if ($totalBytes -le 0) {
+            Write-Warning "无法获取文件总大小（服务器不支持HEAD请求），将继续下载但无法显示进度百分比"
+            $totalMB = "未知"
+        }
+        else {
+            $totalMB = [math]::Round($totalBytes / 1MB, 2)
+            Write-Host "文件总大小：$totalMB MB`n" -ForegroundColor Green
+        }
 
         # 2. 初始化下载参数
         $startTime = Get-Date
         $downloadedBytes = 0
-        $bufferSize = 8192  # 8KB缓冲区
+        $bufferSize = 16384  # 16KB缓冲区（平衡速度与内存）
         $stopDownload = $false
 
-        # 3. 注册Ctrl+C停止下载
-        Register-ObjectEvent -InputObject $host.ui.RawUI -EventName KeyDown -Action {
+        # 3. 注册Ctrl+C停止事件（避免强制退出导致文件残留）
+        $keyEvent = Register-ObjectEvent -InputObject $host.ui.RawUI -EventName KeyDown -Action {
             if ($EventArgs.VirtualKeyCode -eq 67 -and $EventArgs.ControlKeyState -eq "LeftCtrlPressed") {
                 $script:stopDownload = $true
-                Write-Host "`n`n检测到Ctrl+C，正在停止下载..." -ForegroundColor Yellow
+                Write-Host "`n`n[提示] 检测到Ctrl+C，正在停止下载（已下载部分将删除）..." -ForegroundColor Yellow
             }
-        } | Out-Null
+        }
 
         # 4. 开始流式下载
         $webClient = New-Object System.Net.WebClient
@@ -121,79 +145,98 @@ function Invoke-Download {
 
             $fileStream.Write($buffer, 0, $readBytes)
             $downloadedBytes += $readBytes
-
-            # 5. 计算进度、速度、剩余时间
-            $elapsedSec = [math]::Round((Get-Date - $startTime).TotalSeconds, 1)
             $downloadedMB = [math]::Round($downloadedBytes / 1MB, 2)
-            $progressPercent = [math]::Round(($downloadedBytes / $totalBytes) * 100, 1)
+
+            # 计算速度和剩余时间（仅当有总大小时有意义）
+            $elapsedSec = [math]::Round((Get-Date - $startTime).TotalSeconds, 1)
             $speedMBps = if ($elapsedSec -gt 0) { [math]::Round($downloadedMB / $elapsedSec, 2) } else { 0 }
-            $remainingSec = if ($speedMBps -gt 0) { [math]::Round(($totalMB - $downloadedMB) / $speedMBps, 0) } else { 0 }
-            $remainingTime = [timespan]::FromSeconds($remainingSec).ToString("hh\:mm\:ss")
-
-            # 6. 显示进度（进度条+文本信息）
-            Write-Progress -Activity "正在下载" -Status "进度：$progressPercent% | 已下载：$downloadedMB/$totalMB MB | 速度：$speedMBps MB/s | 剩余：$remainingTime" -PercentComplete $progressPercent
+            
+            if ($totalBytes -gt 0) {
+                $progressPercent = [math]::Round(($downloadedBytes / $totalBytes) * 100, 1)
+                $remainingSec = if ($speedMBps -gt 0) { [math]::Round(($totalMB - $downloadedMB) / $speedMBps, 0) } else { 0 }
+                $remainingTime = [timespan]::FromSeconds($remainingSec).ToString("hh\:mm\:ss")
+                # 显示进度条+详细信息
+                Write-Progress -Activity "下载中" -Status "进度：$progressPercent% | 已下载：$downloadedMB MB | 速度：$speedMBps MB/s | 剩余：$remainingTime" -PercentComplete $progressPercent
+            }
+            else {
+                # 无总大小时仅显示已下载和速度
+                Write-Progress -Activity "下载中" -Status "已下载：$downloadedMB MB | 速度：$speedMBps MB/s" -PercentComplete -1
+            }
         }
 
-        # 7. 下载结果处理
+        # 5. 处理下载结果
         if ($stopDownload) {
-            Write-Host "`n下载已手动停止，文件可能不完整！" -ForegroundColor Red
-            $fileStream.Close()
-            $stream.Close()
-            $webClient.Dispose()
-            if (Test-Path $SavePath) { Remove-Item $SavePath -Force }
-            return
+            throw "用户手动停止下载"
         }
 
-        Write-Progress -Activity "下载完成" -Status "100% 完成" -PercentComplete 100 -Completed
-        Write-Host "`n下载成功！文件已保存到：$SavePath`n" -ForegroundColor Green
+        # 下载完成（清理进度条）
+        Write-Progress -Activity "下载完成" -Status "100% 成功" -PercentComplete 100 -Completed
+        Write-Host "`n[下载成功] 文件已保存到：$SavePath`n" -ForegroundColor Green
     }
     catch {
-        Write-Host "`n下载失败：$($_.Exception.Message)" -ForegroundColor Red
-        if (Test-Path $SavePath) { Remove-Item $SavePath -Force }
+        # 捕获所有错误并明确提示（关键修复：不再静默退出）
+        Write-Host "`n[下载失败] 原因：$($_.Exception.Message)" -ForegroundColor Red
+        # 删除不完整文件
+        if (Test-Path $SavePath) {
+            Remove-Item $SavePath -Force | Out-Null
+            Write-Host "已删除不完整文件：$SavePath`n" -ForegroundColor Gray
+        }
     }
     finally {
-        # 清理资源
+        # 强制清理资源（避免句柄占用）
         if ($fileStream) { $fileStream.Close() }
         if ($stream) { $stream.Close() }
         if ($webClient) { $webClient.Dispose() }
+        if ($keyEvent) { Unregister-Event -SourceIdentifier $keyEvent.SourceIdentifier }
     }
 }
 
 
-# -------------------------- 5. 主流程（菜单选择+下载执行） --------------------------
+# -------------------------- 5. 主流程（关键修复：输入解析+错误处理） --------------------------
+# 先获取有效桌面路径（避免后续路径错误）
+$desktopPath = Get-ValidDesktopPath
+
 do {
     Show-Menu
-    $choice = Read-Host -Prompt "`n请输入选项编号（1-$($downloadOptions.Count)）"
+    $choiceInput = Read-Host -Prompt "`n请输入选项编号（1-$($downloadOptions.Count)）"
 
-    # 验证输入合法性
-    if (-not [int]::TryParse($choice, [ref]$choiceInt) -or $choiceInt -lt 1 -or $choiceInt -gt $downloadOptions.Count) {
-        Write-Host "`n输入错误，请输入1-$($downloadOptions.Count)之间的数字！`n" -ForegroundColor Red
+    # 修复1：严格验证输入（必须是数字且在范围内）
+    if (-not [int]::TryParse($choiceInput, [ref]$choiceInt)) {
+        Write-Host "`n[错误] 输入无效！请输入数字（1-$($downloadOptions.Count)）`n" -ForegroundColor Red
+        continue
+    }
+    if ($choiceInt -lt 1 -or $choiceInt -gt $downloadOptions.Count) {
+        Write-Host "`n[错误] 选项编号超出范围！请输入1-$($downloadOptions.Count)`n" -ForegroundColor Red
         continue
     }
 
+    # 修复2：确认选项存在（避免索引错误）
     $selected = $downloadOptions[$choiceInt - 1]
+    if ($null -eq $selected) {
+        Write-Host "`n[错误] 未找到对应选项，请重新选择`n" -ForegroundColor Red
+        continue
+    }
 
     # 退出脚本
     if ($selected.Url -eq $null) {
-        Write-Host "`n脚本退出，感谢使用！" -ForegroundColor Cyan
+        Write-Host "`n[脚本结束] 感谢使用！`n" -ForegroundColor Cyan
         exit 0
     }
 
-    # 执行下载（保存到桌面）
+    # 生成保存路径（桌面+文件名）
     $fileName = [System.IO.Path]::GetFileName($selected.Url)
-    $desktopPath = [Environment]::GetFolderPath("Desktop")
     $savePath = Join-Path $desktopPath $fileName
 
     # 检查文件是否已存在
     if (Test-Path $savePath) {
-        $overwrite = Read-Host -Prompt "`n文件 '$fileName' 已存在，是否覆盖？（Y/N）"
+        $overwrite = Read-Host -Prompt "`n[提示] 文件 '$fileName' 已存在，是否覆盖？（Y/N，默认N）"
         if ($overwrite -notmatch "^Y$|^Yes$" -and $overwrite -notmatch "^y$|^yes$") {
-            Write-Host "`n取消下载，保留原有文件`n" -ForegroundColor Yellow
+            Write-Host "`n[操作取消] 保留原有文件，返回菜单`n" -ForegroundColor Yellow
             continue
         }
     }
 
-    # 调用下载函数
+    # 执行下载（核心逻辑）
     Invoke-Download -Url $selected.Url -SavePath $savePath
 
 } while ($true)
