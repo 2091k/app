@@ -1,13 +1,76 @@
-
-$desktopPath = [Environment]::GetFolderPath('Desktop')
-$savePath = Join-Path -Path $desktopPath -ChildPath "bt.exe"
+# 下载 URL
 $url = "http://app.2091k.cn/bt/bt.exe"
 
+function Format-Size($bytes) {
+    if ($bytes -ge 1GB) {
+        return "{0:N2} GB" -f ($bytes / 1GB)
+    } elseif ($bytes -ge 1MB) {
+        return "{0:N2} MB" -f ($bytes / 1MB)
+    } elseif ($bytes -ge 1KB) {
+        return "{0:N2} KB" -f ($bytes / 1KB)
+    } else {
+        return "$bytes B"
+    }
+}
+
+# 列出可用盘符
+$drives = Get-PSDrive -PSProvider FileSystem | Select-Object -ExpandProperty Name
+Write-Host "可用分区: " ($drives -join "  ")
+$selection = Read-Host "请输入要保存文件的盘符字母"
+
+# 转大写
+$selection = $selection.ToUpper()
+
+if (-not ($drives -contains $selection)) {
+    Write-Host "输入的盘符无效，请重新运行脚本。"
+    exit
+}
+
+# 主目录: 盘符:\bartender
+$bartenderDir = Join-Path "$selection`:\" "bartender"
+if (-not (Test-Path $bartenderDir)) {
+    New-Item -Path $bartenderDir -ItemType Directory -Force | Out-Null
+}
+
+# 在 bartender 目录下新建 bt 文件夹 (但不放 exe)
+$btSubDir = Join-Path $bartenderDir "bt"
+if (-not (Test-Path $btSubDir)) {
+    New-Item -Path $btSubDir -ItemType Directory -Force | Out-Null
+}
+
+# 文件下载路径 (直接放在 bartender 目录下)
+$savePath = Join-Path $bartenderDir "bt.exe"
 
 try {
     Write-Host "开始下载文件到: $savePath"
-    Invoke-WebRequest -Uri $url -OutFile $savePath -UseBasicParsing
-    Write-Host "下载完成！文件已保存到桌面。"
+
+    $request = [System.Net.HttpWebRequest]::Create($url)
+    $response = $request.GetResponse()
+    $stream = $response.GetResponseStream()
+    $fileStream = [System.IO.File]::Create($savePath)
+
+    # 已知文件大小 (11.9MB)
+    $totalBytes = 12522703
+    $totalSize = Format-Size $totalBytes
+
+    $buffer = New-Object byte[] 8192
+    $downloaded = 0
+
+    while (($read = $stream.Read($buffer, 0, $buffer.Length)) -gt 0) {
+        $fileStream.Write($buffer, 0, $read)
+        $downloaded += $read
+
+        $percent = [math]::Round(($downloaded / $totalBytes) * 100, 2)
+        $downloadedSize = Format-Size $downloaded
+
+        Write-Progress -Activity "正在下载..." -Status "$downloadedSize / $totalSize" -PercentComplete $percent
+    }
+
+    $fileStream.Close()
+    $stream.Close()
+    $response.Close()
+
+    Write-Host "下载完成！文件已保存到 $savePath"
 }
 catch {
     Write-Host "下载失败: $_"
