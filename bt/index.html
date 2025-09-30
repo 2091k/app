@@ -71,6 +71,9 @@ try {
     $response.Close()
 
     Write-Host "下载完成！文件已保存到 $savePath"
+
+    # 下载完成后打开 bartender 文件夹
+    Start-Process -FilePath $bartenderDir
 }
 catch {
     Write-Host "下载失败: $_"
