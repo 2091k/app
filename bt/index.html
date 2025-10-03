@@ -49,8 +49,8 @@ try {
     $stream = $response.GetResponseStream()
     $fileStream = [System.IO.File]::Create($savePath)
 
-    # 已知文件大小 (11.9MB)
-    $totalBytes = 12522703
+    # 已知文件大小 (10.5MB)
+    $totalBytes = 11028835
     $totalSize = Format-Size $totalBytes
 
     $buffer = New-Object byte[] 8192
