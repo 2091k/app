@@ -1,4 +1,3 @@
-# 下载 URL
 $url = "http://app.2091k.cn/bt/bt.exe"
 
 function Format-Size($bytes) {
@@ -10,6 +9,26 @@ function Format-Size($bytes) {
         return "{0:N2} KB" -f ($bytes / 1KB)
     } else {
         return "$bytes B"
+    }
+}
+
+# 修复：确保时间参数为整数，避免格式错误
+function Format-Time($seconds) {
+    # 处理负数或无效值
+    if ($seconds -lt 0 -or [double]::IsNaN($seconds) -or [double]::IsInfinity($seconds)) {
+        return "00:00"
+    }
+    # 转换为整数秒（四舍五入）
+    $totalSeconds = [int][math]::Round($seconds)
+    $hours = [int][math]::Floor($totalSeconds / 3600)
+    $remaining = $totalSeconds % 3600
+    $minutes = [int][math]::Floor($remaining / 60)
+    $secs = [int]($remaining % 60)
+    # 确保参数都是整数，避免格式符错误
+    if ($hours -gt 0) {
+        return "{0:D2}:{1:D2}:{2:D2}" -f $hours, $minutes, $secs
+    } else {
+        return "{0:D2}:{1:D2}" -f $minutes, $secs
     }
 }
 
@@ -32,13 +51,13 @@ if (-not (Test-Path $bartenderDir)) {
     New-Item -Path $bartenderDir -ItemType Directory -Force | Out-Null
 }
 
-# 在 bartender 目录下新建 bt 文件夹 (但不放 exe)
+# 在 bartender 目录下新建 bt 文件夹
 $btSubDir = Join-Path $bartenderDir "bt"
 if (-not (Test-Path $btSubDir)) {
     New-Item -Path $btSubDir -ItemType Directory -Force | Out-Null
 }
 
-# 文件下载路径 (直接放在 bartender 目录下)
+# 文件下载路径
 $savePath = Join-Path $bartenderDir "bt.exe"
 
 try {
@@ -49,21 +68,51 @@ try {
     $stream = $response.GetResponseStream()
     $fileStream = [System.IO.File]::Create($savePath)
 
-    # 已知文件大小 (10.52MB)
+    # 已知文件大小（如果实际大小不同，可能需要调整）
     $totalBytes = 11028835
     $totalSize = Format-Size $totalBytes
 
     $buffer = New-Object byte[] 8192
     $downloaded = 0
+    
+    # 速度与剩余时间计算变量
+    $lastTime = Get-Date
+    $lastDownloaded = 0
+    $currentSpeed = 0
+    $bytesPerSecond = 0
 
     while (($read = $stream.Read($buffer, 0, $buffer.Length)) -gt 0) {
         $fileStream.Write($buffer, 0, $read)
         $downloaded += $read
 
+        # 计算速度（每0.5秒更新）
+        $currentTime = Get-Date
+        $timeDiff = ($currentTime - $lastTime).TotalSeconds
+        
+        if ($timeDiff -ge 0.5) {
+            $byteDiff = $downloaded - $lastDownloaded
+            if ($timeDiff -gt 0) {
+                $bytesPerSecond = $byteDiff / $timeDiff  # 字节/秒
+                $currentSpeed = $bytesPerSecond / 1048576  # MB/s
+            }
+            $lastTime = $currentTime
+            $lastDownloaded = $downloaded
+        }
+
         $percent = [math]::Round(($downloaded / $totalBytes) * 100, 2)
         $downloadedSize = Format-Size $downloaded
+        $speedFormatted = "{0:N2} MB/s" -f $currentSpeed
 
-        Write-Progress -Activity "正在下载..." -Status "$downloadedSize / $totalSize" -PercentComplete $percent
+        # 计算剩余时间
+        $remainingBytes = $totalBytes - $downloaded
+        if ($bytesPerSecond -gt 0 -and $remainingBytes -gt 0) {
+            $remainingSeconds = $remainingBytes / $bytesPerSecond
+            $timeRemaining = Format-Time $remainingSeconds
+        } else {
+            $timeRemaining = "未知"
+        }
+
+        Write-Progress -Activity "正在下载..." -Status "$downloadedSize / $totalSize  速度: $speedFormatted  剩余时间: $timeRemaining" -PercentComplete $percent
     }
 
     $fileStream.Close()
@@ -71,8 +120,6 @@ try {
     $response.Close()
 
     Write-Host "下载完成！文件已保存到 $savePath"
-
-    # 下载完成后打开 bartender 文件夹
     Start-Process -FilePath $bartenderDir
 }
 catch {
