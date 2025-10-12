@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Skyworth密码计算器</title>
+    <script src="/js/md5.min.js"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: #333;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 500px;
+            padding: 30px;
+        }
+        
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #2c3e50;
+            font-weight: 600;
+        }
+		
+        p {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #2c3e50;
+            font-weight: 600;
+        }
+        
+        .description {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #7f8c8d;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #2c3e50;
+        }
+        
+        input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+        
+        input:focus {
+            border-color: #3498db;
+            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+            outline: none;
+        }
+        
+        button {
+            background: linear-gradient(to right, #3498db, #2980b9);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 14px 20px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.3s;
+        }
+        
+        button:hover {
+            background: linear-gradient(to right, #2980b9, #3498db);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        button:active {
+            transform: translateY(0);
+        }
+        
+        .result-container {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #3498db;
+            display: none;
+        }
+        
+        .result-title {
+            font-weight: 500;
+            margin-bottom: 10px;
+            color: #2c3e50;
+        }
+        
+        .result-value {
+            font-size: 24px;
+            font-weight: 600;
+            color: #e74c3c;
+            word-break: break-all;
+        }
+        
+        .info-box {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e8f4fc;
+            border-radius: 6px;
+            font-size: 14px;
+            color: #2c3e50;
+        }
+        
+        .error {
+            color: #e74c3c;
+            font-size: 14px;
+            margin-top: 5px;
+            display: none;
+        }
+        
+        .loading {
+            display: none;
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        .spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-left-color: #3498db;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Skyworth 密码计算器</h2>
+		<p>by_Allen</p>
+        
+        <div class="form-group">
+            <label for="mac">MAC地址</label>
+            <input type="text" id="mac" placeholder="例如: 00:1A:2B:3C:4D:5E">
+            <div class="error" id="mac-error">请输入有效的MAC地址</div>
+        </div>
+        
+        <div class="form-group">
+            <label for="random">随机数</label>
+            <input type="text" id="random" placeholder="例如: 123456">
+            <div class="error" id="random-error">请输入随机数</div>
+        </div>
+        
+        <button id="calculate-btn">计算密码</button>
+        
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>正在计算...</p>
+        </div>
+        
+        <div class="result-container" id="result-container">
+            <div class="result-title">计算结果:</div>
+            <div class="result-value" id="result-value"></div>
+        </div>
+        
+        <div class="info-box">
+            <p><strong>说明:</strong> 输入MAC地址和随机数，计算对应的密码值。</p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const macInput = document.getElementById('mac');
+            const randomInput = document.getElementById('random');
+            const calculateBtn = document.getElementById('calculate-btn');
+            const resultContainer = document.getElementById('result-container');
+            const resultValue = document.getElementById('result-value');
+            const loading = document.getElementById('loading');
+            const macError = document.getElementById('mac-error');
+            const randomError = document.getElementById('random-error');
+            
+            // 验证MAC地址格式
+            function isValidMac(mac) {
+                // 简单验证：允许常见MAC地址格式
+                const macRegex = /^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$/;
+                return macRegex.test(mac);
+            }
+            
+            // 计算数字
+            function calculateNumber(md5Hash) {
+                if (md5Hash && md5Hash.length >= 32) {
+                    const beforeStr = md5Hash.substring(0, 16);
+                    const afterStr = md5Hash.substring(16, 32);
+                    
+                    let beforeNum = 0;
+                    for (let i = 0; i < beforeStr.length; i++) {
+                        beforeNum += beforeStr.charCodeAt(i) - 0x30;
+                    }
+                    
+                    let afterNum = 0;
+                    for (let i = 0; i < afterStr.length; i++) {
+                        afterNum += afterStr.charCodeAt(i) - 0x30;
+                    }
+                    
+                    return beforeNum * afterNum;
+                }
+                return 0;
+            }
+            
+            // 计算密码
+            function calculatePassword(mac, random) {
+                const fullStr = `JSCMCC_SKYWORTH${mac}${random}tianhuaxin@skyworth.com`;
+                
+                // 使用MD5库计算哈希值
+                const md5Hash = md5(fullStr);
+                
+                return calculateNumber(md5Hash).toString();
+            }
+            
+            // 处理计算按钮点击
+            calculateBtn.addEventListener('click', function() {
+                // 重置错误信息
+                macError.style.display = 'none';
+                randomError.style.display = 'none';
+                
+                const mac = macInput.value.trim();
+                const random = randomInput.value.trim();
+                
+                let hasError = false;
+                
+                // 验证输入
+                if (!mac) {
+                    macError.textContent = '请输入MAC地址';
+                    macError.style.display = 'block';
+                    hasError = true;
+                } else if (!isValidMac(mac)) {
+                    macError.textContent = 'MAC地址格式不正确';
+                    macError.style.display = 'block';
+                    hasError = true;
+                }
+                
+                if (!random) {
+                    randomError.textContent = '请输入随机数';
+                    randomError.style.display = 'block';
+                    hasError = true;
+                }
+                
+                if (hasError) return;
+                
+                // 显示加载状态
+                loading.style.display = 'block';
+                resultContainer.style.display = 'none';
+                
+                // 使用setTimeout来模拟异步计算，避免UI阻塞
+                setTimeout(function() {
+                    try {
+                        // 计算密码
+                        const password = calculatePassword(mac, random);
+                        
+                        // 显示结果
+                        resultValue.textContent = password;
+                        resultContainer.style.display = 'block';
+                    } catch (error) {
+                        console.error("计算错误:", error);
+                        resultValue.textContent = "计算过程中发生错误: " + error.message;
+                        resultContainer.style.display = 'block';
+                    } finally {
+                        // 隐藏加载状态
+                        loading.style.display = 'none';
+                    }
+                }, 100);
+            });
+            
+            // 输入时隐藏错误信息
+            macInput.addEventListener('input', function() {
+                macError.style.display = 'none';
+            });
+            
+            randomInput.addEventListener('input', function() {
+                randomError.style.display = 'none';
+            });
+        });
+    </script>
+</body>
+</html>
