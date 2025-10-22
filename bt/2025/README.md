@@ -39,3 +39,11 @@
 <b>BarTender9.4下载地址</b> | <b>激活程序</b>
 :---------- | :----------
 [BarTender9.4](https://portal.seagullscientific.com/downloads/PrepareDownload?type=BarTender&fileName=https://downloads1.bartendersoftware.com.cn/BarTender/9.4/BT94_SR3_2781_Suite.exe)  | [bt9.4_key](http://app.2091k.cn/bt/bt9.4_key.exe)
+
+
+<b>安装程序包</b> | <b>激活程序</b>
+:---------- | :----------
+[NET Framework 4.8 脱机安装程序包](https://download.microsoft.com/download/f/3/a/f3a6af84-da23-40a5-8d1c-49cc10c8e76f/NDP48-x86-x64-AllOS-ENU.exe)  | xxx
+[Microsoft Access 2010 数据库64位](https://app.2091k.cn/bt/AccessDatabaseEngine_X64.exe)  | xxx
+[Microsoft Access 2016 数据库64位](https://download.microsoft.com/download/3/5/c/35c84c36-661a-44e6-9324-8786b8dbe231/accessdatabaseengine_X64.exe)  | xxx
+[NET Framework 3.5 启动程序 win10 win11](https://app.2091k.cn/win/net3.5.cmd)  | xxx
