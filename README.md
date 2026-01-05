@@ -1,6 +1,6 @@
 <b>直播-全网通用高清</b> | <b>大小</b>
 :---------- | :----------
-[IPTV+++.apk](/IPTV+++.apk)  | 13.7MB
+[不可用-IPTV+++.apk](/IPTV+++.apk)  | 13.7MB
 
 
 <b>直播-仅安徽移动可用</b> | <b>大小</b>
@@ -15,4 +15,4 @@
 [未来电视-仅安徽移动可用.apk](/wlds.apk)  | 9.62MB
 [牛牛乐园-仅安徽移动可用.apk](/nnly.apk)  | 10.2MB
 <b>破解类</b> | <b>大小</b>
-[酷我音乐SVIP.apk](https://github.com/2091k/down/releases/download/%E7%A0%B4%E8%A7%A3APP/-v10.5.3.1-VIP-v8a-.apk)  | 186MB
+[不可用-酷我音乐SVIP.apk](https://github.com/2091k/down/releases/download/%E7%A0%B4%E8%A7%A3APP/-v10.5.3.1-VIP-v8a-.apk)  | 186MB
