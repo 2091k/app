@@ -29,6 +29,10 @@
 :---------- | :----------
 [BT2022_R8_216048_Full_x64](https://portal.seagullscientific.com/downloads/PrepareDownload?type=BarTender&fileName=https://downloads1.bartendersoftware.com.cn/BarTender/11.3/BT2022_R8_216048_Full_x64.exe)  | [2022_R8.zip](http://app.2091k.cn/bt/2022_R8_key.zip)
 
+<b>11.8下载地址</b> | <b>激活程序</b>
+:---------- | :----------
+[BT11.8.0_247912_Full_x64.exe](https://portal.seagullscientific.com/downloads/PrepareDownload?type=BarTender&fileName=https://dy5utiwd2mogv.cloudfront.net/BarTender/11.8/BT11.8.0_247912_Full_x64.exe&origin=/downloads/bartender&s3path=BarTender/11.8/BT11.8.0_247912_Full_x64.exe)  | 
+
 
 <b>BarTender10.1下载地址</b> | <b>激活程序</b>
 :---------- | :----------
