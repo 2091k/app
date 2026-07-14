@@ -1,6 +1,6 @@
 <b>2016_R8_R9下载地址</b> | <b>激活程序</b>
 :---------- | :----------
-[BT2016_R8_3153_Full](https://flist.2091k.cn/down/cct3dnvpibd/1910787893/BT2016_R8_3153_Full.exe)  | 
+[BT2016_R8_3153_Full](https://cloud.2091k.cn/alist/d/CMCC/电脑/app/TSC/BarTend/企业版/官方版本/BT2016_R8_3153_Full.exe?sign=8TNMIdovPGOuuqAZ_trR9LrpFDwcI0CH3gA-uoLv3Qg=:0)  | 
 [BT2016_R9_3160_Full_x64](https://portal.seagullscientific.com/downloads/PrepareDownload?type=BarTender&fileName=https://downloads1.bartendersoftware.com.cn/BarTender/11.0/BT2016_R9_3160_Full_x64.exe)  | 
 
 <b>2019_R6下载地址</b> | <b>激活程序</b>
