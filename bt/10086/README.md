@@ -1,38 +1,38 @@
 <b>2016_R8_R9下载地址</b> | <b>激活程序</b>
 :---------- | :----------
 [BT2016_R8_3153_Full](https://cloud.2091k.cn/alist/d/CMCC/电脑/app/TSC/BarTend/企业版/官方版本/BT2016_R8_3153_Full.exe?sign=8TNMIdovPGOuuqAZ_trR9LrpFDwcI0CH3gA-uoLv3Qg=:0)  | 
-[BT2016_R9_3160_Full_x64](https://portal.seagullscientific.com/downloads/PrepareDownload?type=BarTender&fileName=https://downloads1.bartendersoftware.com.cn/BarTender/11.0/BT2016_R9_3160_Full_x64.exe)  | 
+[BT2016_R9_3160_Full_x64](https://portal.seagullscientific.com/downloads/PrepareDownload?type=BarTender&fileName=https://downloads1.bartendersoftware.com.cn/BarTender/11.0/BT2016_R9_3160_Full_x64.exe)  | [2016_R9_key.zip](https://wwbda.lanzouv.com/itEEF42xosna)
 
 <b>2019_R6下载地址</b> | <b>激活程序</b>
 :---------- | :----------
 [BT2019_R6_147532_Full](https://portal.seagullscientific.com/downloads/PrepareDownload?type=BarTender&fileName=https://downloads1.bartendersoftware.com.cn/BarTender/11.1/BT2019_R6_147532_Full.exe)  | 
-[BT2019_R6_147532_Full_x64](https://portal.seagullscientific.com/downloads/PrepareDownload?type=BarTender&fileName=https://downloads1.bartendersoftware.com.cn/BarTender/11.1/BT2019_R6_147532_Full_x64.exe)  | 
+[BT2019_R6_147532_Full_x64](https://portal.seagullscientific.com/downloads/PrepareDownload?type=BarTender&fileName=https://downloads1.bartendersoftware.com.cn/BarTender/11.1/BT2019_R6_147532_Full_x64.exe)  | [2019_R6_key.zip](https://wwbda.lanzouv.com/ifeX642xoqdi)
 
 <b>2019_R10下载地址</b> | <b>激活程序</b>
 :---------- | :----------
-[BT2019_R10_167038_Full_x64](https://portal.seagullscientific.com/downloads/PrepareDownload?type=BarTender&fileName=https://downloads1.bartendersoftware.com.cn/BarTender/11.1/BT2019_R10_167038_Full_x64.exe)  | 
+[BT2019_R10_167038_Full_x64](https://portal.seagullscientific.com/downloads/PrepareDownload?type=BarTender&fileName=https://downloads1.bartendersoftware.com.cn/BarTender/11.1/BT2019_R10_167038_Full_x64.exe)  | [2019_R10_key.zip](https://wwbda.lanzouv.com/im7BQ42xoqid)
 
 <b>2021_R1下载地址</b> | <b>激活程序</b>
 :---------- | :----------
 [BT2021_R1_160168_Full](https://portal.seagullscientific.com/downloads/PrepareDownload?type=BarTender&fileName=https://downloads1.bartendersoftware.com.cn/BarTender/11.2/BT2021_R1_160168_Full.exe)  | 
-[BT2021_R1_160168_Full_x64](https://portal.seagullscientific.com/downloads/PrepareDownload?type=BarTender&fileName=https://downloads1.bartendersoftware.com.cn/BarTender/11.2/BT2021_R1_160168_Full_x64.exe)  | 
+[BT2021_R1_160168_Full_x64](https://portal.seagullscientific.com/downloads/PrepareDownload?type=BarTender&fileName=https://downloads1.bartendersoftware.com.cn/BarTender/11.2/BT2021_R1_160168_Full_x64.exe)  | [2021_R1_key.zip](https://wwbda.lanzouv.com/iRZlj42xoqni)
 
 <b>2021_R9下载地址</b> | <b>激活程序</b>
 :---------- | :----------
-[BT2021_R9_186892_Full_x64](https://portal.seagullscientific.com/downloads/PrepareDownload?type=BarTender&fileName=https://downloads1.bartendersoftware.com.cn/BarTender/11.2/BT2021_R9_186892_Full_x64.exe)  | 
+[BT2021_R9_186892_Full_x64](https://portal.seagullscientific.com/downloads/PrepareDownload?type=BarTender&fileName=https://downloads1.bartendersoftware.com.cn/BarTender/11.2/BT2021_R9_186892_Full_x64.exe)  | [ 2021_R9_key.zip](https://wwbda.lanzouv.com/ihynA42xoqza)
 
 <b>2022_R7下载地址</b> | <b>激活程序</b>
 :---------- | :----------
-[BT2022_R7_209432_Full_x64](https://portal.seagullscientific.com/downloads/PrepareDownload?type=BarTender&fileName=https://downloads1.bartendersoftware.com.cn/BarTender/11.3/BT2022_R7_209432_Full_x64.exe)  | 
+[BT2022_R7_209432_Full_x64](https://portal.seagullscientific.com/downloads/PrepareDownload?type=BarTender&fileName=https://downloads1.bartendersoftware.com.cn/BarTender/11.3/BT2022_R7_209432_Full_x64.exe)  | [ 2022_R7_key.zip](https://wwbda.lanzouv.com/it9cI42xorlc)
 
 <b>2022_R8下载地址</b> | <b>激活程序</b>
 :---------- | :----------
-[BT2022_R8_216048_Full_x64](https://portal.seagullscientific.com/downloads/PrepareDownload?type=BarTender&fileName=https://downloads1.bartendersoftware.com.cn/BarTender/11.3/BT2022_R8_216048_Full_x64.exe)  | 
+[BT2022_R8_216048_Full_x64](https://portal.seagullscientific.com/downloads/PrepareDownload?type=BarTender&fileName=https://downloads1.bartendersoftware.com.cn/BarTender/11.3/BT2022_R8_216048_Full_x64.exe)  | [ 2022_R8_key.zip](https://wwbda.lanzouv.com/iNCdL42xorwd)
 
 
 <b>BarTender10.1下载地址</b> | <b>激活程序</b>
 :---------- | :----------
-[BarTender10.1](https://portal.seagullscientific.com/downloads/PrepareDownload?type=BarTender&fileName=https://downloads1.bartendersoftware.com.cn/BarTender/10.1/BT101_SR4_2961_Suite.exe)  | 
+[BarTender10.1](https://portal.seagullscientific.com/downloads/PrepareDownload?type=BarTender&fileName=https://downloads1.bartendersoftware.com.cn/BarTender/10.1/BT101_SR4_2961_Suite.exe)  | [BT_10.1_SR4_key.zip](https://wwbda.lanzouv.com/i5E9S42xos1i)
 
 
 
