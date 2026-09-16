@@ -1,3 +1,5 @@
+#### 关注公众号【素简好物】获取序列号
+
 <b>2016_R8_R9下载地址</b> | <b>激活程序</b>
 :---------- | :----------
 [BT2016_R8_3153_Full](https://cloud.2091k.cn/alist/d/CMCC/电脑/app/TSC/BarTend/企业版/官方版本/BT2016_R8_3153_Full.exe?sign=8TNMIdovPGOuuqAZ_trR9LrpFDwcI0CH3gA-uoLv3Qg=:0)  | 
